@@ -1,0 +1,4 @@
+Paquete estudiantil CampusFlow RC-1
+Generado: 2026-10-20T11:24:11-03:00
+Incluye: rc1/, plantillas/, README.md
+Excluye: rc2, evidence, docente, alumnos/expediente, solución

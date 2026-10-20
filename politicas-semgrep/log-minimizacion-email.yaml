@@ -1,0 +1,11 @@
+# Política de seguridad · CampusFlow (organización ficticia del taller)
+# Los logs operativos no deben interpolar la variable de correo completo en el mensaje.
+
+rules:
+  - id: campusflow-log-email-completo
+    message: >
+      No registrar el correo completo en logs operativos. Usa redacción (p. ej. a***@dominio.test)
+      o un identificador de inscripción correlacionable.
+    severity: WARNING
+    languages: [javascript]
+    pattern-regex: 'registration\.confirmed email=\$\{email\}'

@@ -1,0 +1,62 @@
+# Compose para el paquete estudiantil: sin expediente docente y UI sin enlace al expediente.
+name: campusflow-rc1-student
+
+services:
+  db:
+    image: postgres:16.10-bookworm@sha256:38471f330eb885e04de130b768d6db4e10469e2311879c7e5c699f6d2d8a1c74
+    environment:
+      POSTGRES_USER: campusflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD}
+      POSTGRES_DB: campusflow
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U campusflow -d campusflow"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  mail:
+    build: ./mail
+    ports:
+      - "127.0.0.1:8025:8025"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8025/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: ./api
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://campusflow:${POSTGRES_PASSWORD}@db:5432/campusflow
+      MAIL_URL: http://mail:8025
+      RELEASE: RC-1
+      SESSION_SECRET: ${SESSION_SECRET:?definir SESSION_SECRET}
+      PORT: "3000"
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      mail:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_CAMPUSFLOW_UI: student
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:

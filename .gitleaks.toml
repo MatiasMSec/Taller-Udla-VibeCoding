@@ -1,0 +1,10 @@
+# Política de escaneo · CampusFlow (organización ficticia del taller)
+# Complementa las reglas por defecto: detecta secretos inertes de laboratorio en plantillas .env.
+
+title = "CampusFlow laboratorio"
+
+[[rules]]
+id = "campusflow-inert-webhook-in-repo"
+description = "Secreto de webhook de pago en archivo versionado (usar gestor de secretos en producción)"
+regex = '''(?i)STRIPE_WEBHOOK_SECRET\s*=\s*CampusFlowInertLabOnly[0-9A-Za-z_-]+'''
+tags = ["lab", "secret", "campusflow"]

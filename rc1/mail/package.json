@@ -1,0 +1,13 @@
+{
+  "name": "campusflow-mail",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Bandeja local de CampusFlow. No envía mensajes a Internet.",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=24.18.1"
+  }
+}
