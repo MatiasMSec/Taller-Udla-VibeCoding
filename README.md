@@ -24,6 +24,16 @@ curl -fsS -X DELETE http://127.0.0.1:8025/messages
 docker compose -f docker-compose.student.yml down
 ```
 
+## Auditoría con agente (DevSecOps)
+
+Skill obligatoria para agentes: [Cloudflare security-audit-skill](https://github.com/cloudflare/security-audit-skill) (instalada en `.agents/skills/security-audit/`). Proceso: `docs/seguridad/07-auditoria-agente-security-audit.md`.
+
+Reinstalar o actualizar:
+
+```bash
+npx skills add https://github.com/cloudflare/security-audit-skill --skill security-audit
+```
+
 ## Herramientas orientativas
 
 Ejecuta y guarda **tus** salidas en `plantillas/registro-escaneos.md`:

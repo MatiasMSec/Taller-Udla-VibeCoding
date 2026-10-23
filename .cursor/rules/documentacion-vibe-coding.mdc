@@ -1,0 +1,38 @@
+---
+description: Mantener docs/ (arquitectura, funcional, seguridad) en proyectos Vibe Coding
+alwaysApply: true
+---
+
+# Documentación obligatoria (`docs/`)
+
+Antes de implementar features transversales (API, auth, infra, modelos), lee `docs/GUIA-AGENTES-DOCUMENTACION.md` y el índice `docs/README.md`.
+
+## Estructura (no inventar rutas paralelas)
+
+- **Arquitectura:** `docs/arquitectura/` — stack, módulos, despliegue, datos, ADRs (`06-decisiones-registro.md`).
+- **Funcional:** `docs/funcional/` — actores, casos de uso, flujos, dominio, contratos (`05-contratos-interfaces.md`).
+- **Seguridad:** `docs/seguridad/` — directivas normativas; citar IDs (`AUTHZ-*`, `LOG-*`, `SCAN-*`, `GATE-*`) en revisiones.
+- **DevSecOps / escaneos:** `docs/seguridad/06-auditoria-devsecops-pipeline.md` + regla `auditoria-devsecops-pipeline.mdc`.
+- **Auditoría agente:** skill `.agents/skills/security-audit/` + `docs/seguridad/07-auditoria-agente-security-audit.md` + regla `security-audit-skill-mandatorio.mdc`.
+
+## Disparadores (actualizar docs en el mismo turno)
+
+| Cambio | Actualizar |
+| --- | --- |
+| Endpoint, pantalla, regla negocio | `funcional/02`, `03`, `05` |
+| Carpeta/servicio/dependencia | `arquitectura/02`, `03` |
+| Docker, env, puertos | `arquitectura/04` |
+| Tabla/modelo | `funcional/04`, `arquitectura/05` |
+| Auth, permisos, secretos, logs | `seguridad/` + ADR si excepción |
+| Decisión difícil de revertir | `arquitectura/06-decisiones-registro.md` |
+
+## Calidad
+
+- Un hecho = un documento canónico; el resto enlaza.
+- Sin secretos en docs; solo **nombres** de variables.
+- Fecha en metadatos de tabla inicial; `<!-- TODO(doc): … -->` hasta cerrar.
+- Español salvo que el README del repo indique otro idioma.
+
+## Cierre de tarea
+
+No cerrar cambios de código sin revisar el checklist en `docs/GUIA-AGENTES-DOCUMENTACION.md` §5.

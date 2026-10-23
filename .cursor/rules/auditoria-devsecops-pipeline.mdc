@@ -1,0 +1,35 @@
+---
+description: Pipeline DevSecOps — SAST, SCA, secret scan, contenedores, DAST/API
+alwaysApply: true
+---
+
+# Auditoría de seguridad (DevSecOps)
+
+Norma completa: `docs/seguridad/06-auditoria-devsecops-pipeline.md`. Aplica en desarrollo, PRs, auditorías y entregas de taller.
+
+## Orden en CI (security gates)
+
+1. **Secret scanning** → bloqueo inmediato (Gitleaks, TruffleHog, etc.).
+2. **SCA + SAST** en paralelo por PR.
+3. **Skill Cloudflare `security-audit`** → obligatoria para agentes (`.agents/skills/security-audit/SKILL.md`; regla `security-audit-skill-mandatorio.mdc`; doc `docs/seguridad/07-…`).
+4. **Container / IaC scan** en build (Trivy, Hadolint, Checkov/KICS).
+5. **DAST / API security** en staging o entorno efímero pre-despliegue.
+
+**Quality gate:** cero vulns **Críticas/Altas** (CVSS ≥ 7) sin parche o **exención documentada** (registro de riesgos / ADR / hallazgos).
+
+## Obligaciones por fase
+
+| Fase | Agente / equipo |
+| --- | --- |
+| Secretos | No hardcode; `.env` + pre-commit; escanear repo (`.gitleaks.toml` en este proyecto) |
+| SCA | `npm audit` o equivalente; lockfiles al día; bloquear CVE alto/crítico |
+| SAST | Semgrep OWASP/CWE + reglas org (`politicas-semgrep/`) |
+| Contenedores | Imagen minimal; `USER` no root; Trivy antes de push |
+| API/DAST | OpenAPI vs OWASP API Top 10; ZAP/Nuclei en staging; cabeceras y access control |
+| Agente multi-fase | Leer y ejecutar skill `security-audit`; validar JSON; mapear a `plantillas/hallazgos.md` |
+
+## Al auditar o cerrar tareas de seguridad
+
+- Registrar salidas en `plantillas/registro-escaneos.md` cuando el README del taller lo pida.
+- Citar IDs del doc (`SCAN-SEC-01`, `GATE-01`) en hallazgos.
+- Enlazar controles de diseño: `docs/seguridad/01`–`05`.

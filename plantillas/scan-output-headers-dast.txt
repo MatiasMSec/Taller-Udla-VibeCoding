@@ -1,0 +1,21 @@
+# Captura DAST manual — 2026-10-22 (stack CampusFlow RC-1, 127.0.0.1)
+
+## GET / (nginx → SPA)
+HTTP/1.1 200 OK
+Server: nginx
+(Sin: Strict-Transport-Security, Content-Security-Policy, X-Frame-Options, Permissions-Policy)
+
+## GET /api/health (vía nginx :8080)
+X-Correlation-Id, X-Content-Type-Options: nosniff, Referrer-Policy: no-referrer, Cache-Control: no-store
+
+## GET /health (API directa :3000)
+X-Content-Type-Options: nosniff, Referrer-Policy: no-referrer, Cache-Control: no-store
+(Sin HSTS — esperable en HTTP local)
+
+## Observación Nuclei / mail
+Tras escaneo Nuclei, contenedor mail crasheó:
+TypeError: Invalid URL en index.js:18 al parsear req.url con payload tipo OSC-8 / interact.sh
+Reinicio: docker compose start mail
+
+## GET /activities (DAST funcional)
+500 genérico con correlationId (en esta sesión: error conexión PG desde API — pg_hba / sin SSL; entorno compose)

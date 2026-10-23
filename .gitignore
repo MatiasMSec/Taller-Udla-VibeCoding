@@ -1,0 +1,11 @@
+# Entorno local (no subir secretos de laboratorio personalizados)
+.env
+**/.env
+!.env.example
+!**/.env.example
+
+# Dependencias y artefactos locales
+node_modules/
+
+# Salidas auditoría Cloudflare security-audit (runs locales)
+.security-audit/

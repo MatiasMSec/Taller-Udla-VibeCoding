@@ -1,0 +1,41 @@
+---
+description: Obligatorio — skill Cloudflare security-audit en auditorías DevSecOps
+alwaysApply: true
+---
+
+# Skill `security-audit` (Cloudflare) — obligatoria
+
+**Origen:** [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)  
+**Instalación local:** `.agents/skills/security-audit/SKILL.md` (lock: `skills-lock.json`)
+
+## Cuándo es mandatorio
+
+Ejecutar el workflow de la skill (leer `SKILL.md` y seguir sus fases) en **modo auditoría completa** cuando:
+
+- El usuario pide auditoría, revisión de seguridad, vulnerabilidades o pen-test del código.
+- Cierras una tarea DevSecOps según `docs/seguridad/06-auditoria-devsecops-pipeline.md` (entrega de taller, pre-PR de seguridad, release).
+- Cambiaste auth, APIs, secretos, contenedores o validación de entradas de forma material.
+
+No sustituye SCA/SAST/DAST automatizados; **complementa** con caza guiada por cobertura y verificación adversaria.
+
+## Procedimiento (resumen)
+
+1. **Leer** `.agents/skills/security-audit/SKILL.md` al inicio (no improvisar fases).
+2. **Modo completo:** 6 fases — recon → hunting → validación candidatos → `findings.json` → verificación independiente → `REPORT.md` / artefactos (ver `VALIDATION-AND-REPORTING.md`).
+3. **Salida:** directorio **fuera del repo** por defecto (`~/security-audit-skill/<repo>/run-N`) o `.security-audit/run-N/` en repo (solo si está en `.gitignore`).
+4. **Validadores Node (obligatorios):**  
+   `node .agents/skills/security-audit/validate-coverage-ledger.cjs <coverage-ledger.json>`  
+   `node .agents/skills/security-audit/validate-findings.cjs <findings.json>`
+5. **Clases de ataque** según stack (este proyecto): `WEB-PROTOCOL-AND-AUTH.md`, `CLIENT-SIDE.md`, `CLOUD-AND-DEPLOYMENT.md`, `SUPPLY-CHAIN-AND-RELEASE.md`, `DATA-ISOLATION-AND-LIFECYCLE.md`.
+6. **Sandbox:** cumplir reglas de ejecución segura del `SKILL.md`; si no hay sandbox, marcar `needs_validation` — no ejecutar código objetivo sin controles.
+7. **Taller UDLA:** volcar hallazgos `confirmed` / `needs_validation` relevantes en `plantillas/hallazgos.md` y escaneos en `plantillas/registro-escaneos.md`; alinear con `docs/seguridad/01`–`05`.
+
+## Veredictos (skill)
+
+- `confirmed` — fallo de frontera de confianza con traza en código.
+- `needs_validation` — hecho no resuelto; **sin severidad** hasta validar.
+- `rejected` — candidato refutado (registrar igualmente).
+
+## Integración pipeline
+
+Orden agente DevSecOps: Secret scan → SCA+SAST → **security-audit (esta skill)** → contenedores → DAST/API. Detalle: `docs/seguridad/07-auditoria-agente-security-audit.md`.
